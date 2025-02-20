@@ -1,21 +1,27 @@
 package com.example.dinesh.dinesh.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
-
+import jakarta.persistence.*;
 import java.util.List;
 
-//@Entity
+@Entity
+@Table(name = "orders")  // Avoid conflict with SQL keyword "order"
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private List<Long> menuItemIds;
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_menuitem",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_item_id")
+    )
+    private List<MenuItem> menuItems;
+
     private double totalAmount;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -24,12 +30,12 @@ public class Order {
         this.id = id;
     }
 
-    public List<Long> getMenuItemIds() {
-        return menuItemIds;
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
     }
 
-    public void setMenuItemIds(List<Long> menuItemIds) {
-        this.menuItemIds = menuItemIds;
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 
     public double getTotalAmount() {
